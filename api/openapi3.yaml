@@ -1,0 +1,158 @@
+openapi: 3.0.3
+info:
+  title: Segments service
+  description: Dynamic user segmentation service. Avito trainee 2023 backend test task.
+  contact:
+    name: Fedor Korolev
+    email: thiranger@yandex.ru
+  license:
+    name: MIT
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/
+    description: Dev server
+paths:
+  /segs:
+    post:
+      tags:
+        - Segments
+      summary: Creates a segment
+      operationId: createSeg
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - seg_id
+              properties:
+                seg_id:
+                  type: string
+                  example: AVITO_DISCOUNT_30
+        required: true
+      responses:
+        '200':
+          description: Successful segment creation
+        '400':
+          description: Specified segment already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Segments
+      summary: Deletes a segment
+      operationId: deleteSeg
+      parameters:
+        - name: seg_id
+          in: query
+          description: Segment identifier
+          required: true
+          schema:
+            type: string
+          example: AVITO_DISCOUNT_30
+      responses:
+        '200':
+          description: Successful segment deletion
+        '404':
+          description: Specified segment doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /segs/{user_id}:
+    put:
+      tags:
+        - Users
+      summary: Updates segments to user
+      operationId: updateUserSegs
+      parameters:
+        - name: user_id
+          in: path
+          description: User identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - segs_to_add
+                - segs_to_remove
+              properties:
+                segs_to_add:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                    - AVITO_VOICE_MESSAGES
+                    - AVITO_PERFORMANCE_VAS
+                segs_to_remove:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                    - AVITO_DISCOUNT_70
+        required: true
+      responses:
+        '200':
+          description: Successful segment update to user
+        '400':
+          description: Specified segment doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Users
+      summary: Returns user's active segments
+      operationId: getUserSegs
+      parameters:
+        - name: user_id
+          in: path
+          description: User identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserId'
+      responses:
+        '200':
+          description: Successfully returning user's active segments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - AVITO_VOICE_MESSAGES
+                  - AVITO_DISCOUNT_15
+components:
+  schemas:
+    UserId:
+      type: integer
+      minimum: 0
+      example: 448675314
+    Error:
+      type: object
+      required:
+        - title
+        - request
+        - time
+      properties:
+        title:
+          type: string
+          example: Entity not found
+        request:
+          type: string
+          example: DELETE /segs/AVITO_DISCOUNT_100
+        time:
+          type: string
+          format: 1970-01-01T00:00:00.00+0000
+          example: 2023-08-27T02:47:03.82+0300
+        errorTraceId:
+          type: string
+          example: c04d1f07-5e4d-4a18-97af-62b3c08ef73e
