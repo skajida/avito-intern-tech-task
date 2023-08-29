@@ -12,13 +12,14 @@ func main() {
 	mux.Handle("/segs", &handler.SegmentsHandler{})
 	mux.Handle("/segs/", &handler.UserHandler{})
 
-	server := http.Server{
-		Addr:         ":8080",
-		Handler:      mux,
-		ReadTimeout:  time.Second,
-		WriteTimeout: time.Second,
+	server := &http.Server{
+		Addr:           ":8080",
+		Handler:        mux,
+		ReadTimeout:    time.Second,
+		WriteTimeout:   time.Second,
+		MaxHeaderBytes: 1 << 16,
 	}
 
 	log.Println("Starting server at", server.Addr, "port")
-	server.ListenAndServe()
+	log.Fatalln(server.ListenAndServe())
 }
