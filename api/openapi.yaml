@@ -1,0 +1,170 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: thiranger@yandex.ru
+    name: Fedor Korolev
+  description: Dynamic user segmentation service. Avito trainee 2023 backend test
+    task.
+  license:
+    name: MIT
+  title: Segments service
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/
+paths:
+  /segs:
+    delete:
+      operationId: deleteSeg
+      parameters:
+      - description: Segment identifier
+        example: AVITO_DISCOUNT_30
+        explode: true
+        in: query
+        name: seg_id
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          description: Successful segment deletion
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Specified segment doesn't exist
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Segment specified incorrectly
+      summary: Deletes a segment
+      tags:
+      - Segments
+    post:
+      operationId: createSeg
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                seg_id:
+                  example: AVITO_DISCOUNT_30
+                  type: string
+              required:
+              - seg_id
+              type: object
+        required: true
+      responses:
+        "201":
+          description: Successful segment creation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Specified segment already exists
+      summary: Creates a segment
+      tags:
+      - Segments
+  /segs/{user_id}:
+    get:
+      operationId: getUserSegs
+      parameters:
+      - description: User identifier
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UserId'
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                example:
+                - AVITO_VOICE_MESSAGES
+                - AVITO_DISCOUNT_15
+                items:
+                  type: string
+                type: array
+          description: Successfully returning user's active segments
+      summary: Returns user's active segments
+      tags:
+      - Users
+    put:
+      operationId: updateUserSegs
+      parameters:
+      - description: User identifier
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          $ref: '#/components/schemas/UserId'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                segs_to_add:
+                  example:
+                  - AVITO_VOICE_MESSAGES
+                  - AVITO_PERFORMANCE_VAS
+                  items:
+                    type: string
+                  type: array
+                segs_to_remove:
+                  example:
+                  - AVITO_DISCOUNT_70
+                  items:
+                    type: string
+                  type: array
+              required:
+              - segs_to_add
+              - segs_to_remove
+              type: object
+        required: true
+      responses:
+        "200":
+          description: Successful segment update to user
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Specified segment doesn't exist
+      summary: Updates segments to user
+      tags:
+      - Users
+components:
+  schemas:
+    UserId:
+      example: 448675314
+      minimum: 0
+      type: integer
+    Error:
+      properties:
+        title:
+          example: Entity not found
+          type: string
+        request:
+          example: DELETE /segs/AVITO_DISCOUNT_100
+          type: string
+        time:
+          example: 2008-03-03T04:47:34+0000
+          format: RFC3339
+          type: string
+        errorTraceId:
+          example: c04d1f07-5e4d-4a18-97af-62b3c08ef73e
+          type: string
+      required:
+      - request
+      - time
+      - title
+      type: object
