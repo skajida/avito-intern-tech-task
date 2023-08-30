@@ -92,12 +92,17 @@ paths:
           content:
             application/json:
               schema:
-                example:
-                - AVITO_VOICE_MESSAGES
-                - AVITO_DISCOUNT_15
-                items:
-                  type: string
-                type: array
+                properties:
+                  seg_active:
+                    example:
+                    - AVITO_VOICE_MESSAGES
+                    - AVITO_DISCOUNT_15
+                    items:
+                      type: string
+                    type: array
+                required:
+                - seg_active
+                type: object
           description: Successfully returning user's active segments
         "404":
           content:
@@ -105,6 +110,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: User doesn't exist
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: User specified incorrectly
       summary: Returns user's active segments
       tags:
       - Users
@@ -157,6 +168,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: User doesn't exist
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Input parameters specified incorrectly
       summary: Updates segments to user
       tags:
       - Users
