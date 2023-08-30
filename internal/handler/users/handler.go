@@ -62,9 +62,11 @@ func updateHandle(service updater, w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(body, &requestSegments); err != nil {
 		hrf.NewErrorResponse(r, "Input parameters specified incorrectly").
 			Send(w, http.StatusUnprocessableEntity)
+		return
 	}
 	if err := service.UpdateUserSegments(r.Context(), user_id, requestSegments.WantedSegments, requestSegments.UnwantedSegments); err != nil {
 		switch err {
+		// case: User doesn't exist
 		default: // TODO different errors
 			hrf.NewErrorResponse(r, "Specified segment doesn't exist").
 				Send(w, http.StatusBadRequest)
