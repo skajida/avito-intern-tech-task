@@ -1,0 +1,11 @@
+CREATE TABLE segments(
+    seg_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    tag VARCHAR(63) NOT NULL UNIQUE
+);
+CREATE TABLE users_segments(
+    blg_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    user_id INT NOT NULL,
+    seg_id INT NOT NULL REFERENCES segments(seg_id),
+    create_time TIMESTAMPTZ DEFAULT NOW(),
+    remove_time TIMESTAMPTZ
+);

@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  segs_db:
+    container_name: service-segs-db
+    image: postgres:alpine3.18
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=root
+    # command: --init-file /docker-entrypoint-initdb.d/init.sql
+    volumes:
+      - ./pginit.sql:/docker-entrypoint-initdb.d/init.sql
