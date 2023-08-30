@@ -21,7 +21,7 @@ func NewHandler(service useror) *UsersHandler {
 func userIdParse(w http.ResponseWriter, r *http.Request, message string) (uint, error) {
 	args := strings.Split(r.URL.Path, "/")[2:]
 	user_id, err := strconv.Atoi(strings.Split(args[0], "?")[0])
-	if len(args) > 1 || err != nil || user_id < 0 {
+	if len(args) > 1 || err != nil {
 		hrf.NewErrorResponse(r, message).Send(w, http.StatusUnprocessableEntity)
 		return 0, fmt.Errorf("Wrong user_id format")
 	}

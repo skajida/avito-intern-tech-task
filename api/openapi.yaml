@@ -181,7 +181,6 @@ components:
   schemas:
     UserId:
       example: 448675314
-      minimum: 0
       type: integer
     Error:
       properties:
