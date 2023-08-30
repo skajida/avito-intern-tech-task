@@ -18,14 +18,14 @@ func NewHandler(service useror) *UsersHandler {
 	return &UsersHandler{business: service}
 }
 
-func userIdParse(w http.ResponseWriter, r *http.Request, message string) (uint, error) {
+func userIdParse(w http.ResponseWriter, r *http.Request, message string) (int, error) {
 	args := strings.Split(r.URL.Path, "/")[2:]
 	user_id, err := strconv.Atoi(strings.Split(args[0], "?")[0])
 	if len(args) > 1 || err != nil {
 		hrf.NewErrorResponse(r, message).Send(w, http.StatusUnprocessableEntity)
 		return 0, fmt.Errorf("Wrong user_id format")
 	}
-	return uint(user_id), nil
+	return user_id, nil
 }
 
 type activeSegments struct {

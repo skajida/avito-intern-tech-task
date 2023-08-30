@@ -4,11 +4,11 @@ package users
 import "context"
 
 type getter interface {
-	GetUserSegments(context.Context, uint) ([]string, error)
+	GetUserSegments(context.Context, int) ([]string, error)
 }
 
 type updater interface {
-	UpdateUserSegments(context.Context, uint, []string, []string) error
+	UpdateUserSegments(context.Context, int, []string, []string) error
 }
 
 type useror interface {
