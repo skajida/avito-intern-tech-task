@@ -29,8 +29,8 @@ func NewErrorResponse(r *http.Request, title string) *ErrorResponse {
 func (this *ErrorResponse) Send(w http.ResponseWriter, status int) {
 	defer log.Println("Responded with errorTraceId", this.ErrorTraceId)
 
-	json_representation, _ := json.Marshal(this)
+	json_repr, _ := json.Marshal(this) // TODO whats the danger?
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	w.Write(json_representation)
+	w.Write(json_repr)
 }
