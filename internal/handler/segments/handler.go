@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"service-segs/internal/model/exchange/request"
 	hrf "service-segs/internal/model/http-response-forms"
 )
 
@@ -17,15 +16,19 @@ func NewHandler(service segmentor) *SegmentsHandler {
 	return &SegmentsHandler{business: service}
 }
 
+type segment struct {
+	SegId string `json:"seg_id"`
+}
+
 func createHandle(service creator, w http.ResponseWriter, r *http.Request) {
-	var requestSegment request.Segment
+	var requestSegment segment
 	body, _ := io.ReadAll(r.Body) // TODO whats the danger?
 	if err := json.Unmarshal(body, &requestSegment); err != nil || requestSegment.SegId == "" {
 		hrf.NewErrorResponse(r, "Segment specified incorrectly").
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	if err := service.AddSegment(r.Context(), requestSegment); err != nil {
+	if err := service.AddSegment(r.Context(), requestSegment.SegId); err != nil {
 		hrf.NewErrorResponse(r, "Specified segment already exists").Send(w, http.StatusBadRequest)
 	} else {
 		w.WriteHeader(http.StatusCreated)
@@ -39,7 +42,7 @@ func deleteHandle(service deletor, w http.ResponseWriter, r *http.Request) {
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	if err := service.RemoveSegment(r.Context(), request.Segment{SegId: seg_id}); err != nil {
+	if err := service.RemoveSegment(r.Context(), seg_id); err != nil {
 		hrf.NewErrorResponse(r, "Specified segment doesn't exist").Send(w, http.StatusNotFound)
 	} else {
 		w.WriteHeader(http.StatusOK)
