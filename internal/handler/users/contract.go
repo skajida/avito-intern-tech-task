@@ -1,9 +1,7 @@
 //go:generate mockgen -source ${GOFILE} -destination mocks_test.go -package ${GOPACKAGE}_test
 package users
 
-import (
-	"context"
-)
+import "context"
 
 type getter interface {
 	GetUserSegments(context.Context, uint) ([]string, error)
