@@ -167,7 +167,7 @@ func (this *IRepository) SelectHistory(
 	}
 	defer rows.Close()
 
-	result := make([]exchange.HistoryEntry, 0)
+	result := []exchange.HistoryEntry{}
 	item := &struct {
 		userId     int
 		segTag     string

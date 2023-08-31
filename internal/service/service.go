@@ -138,7 +138,7 @@ func (this *SegmentsService) RequestHistory(
 	id int,
 	start time.Time,
 ) (string, error) {
-	end := time.Date(start.Year(), start.Month(), 1, 0, 0, 0, 0, time.Local)
+	end := time.Date(start.Year(), start.Month()+1, 1, 0, 0, 0, 0, time.Local)
 	history, err := this.internal.SelectHistory(ctx, id, start, end)
 	if err != nil {
 		return "", fmt.Errorf(errorTemplate, "history", err)
