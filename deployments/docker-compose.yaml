@@ -5,12 +5,16 @@ services:
     container_name: service-segs-db
     image: postgres:alpine3.18
     restart: always
+    environment:
+      POSTGRES_USER: thiranger
+      POSTGRES_PASSWORD: qwertysegs2140
+      POSTGRES_DB: service-segs-db
+      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - 5432:5432
-    environment:
-      - POSTGRES_PASSWORD=root
     volumes:
       - ./pginit.sql:/docker-entrypoint-initdb.d/init.sql
+      - segment-segs-dbvol:/var/lib/postgresql/data/pgdata
   segs_svc:
     container_name: service-segs
     build:
@@ -25,4 +29,5 @@ services:
       - segment-segs-csv:/some/path/to/mounted/volume
 
 volumes:
+  segment-segs-dbvol:
   segment-segs-csv:

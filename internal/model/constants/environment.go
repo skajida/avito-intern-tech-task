@@ -2,8 +2,12 @@ package constants
 
 const (
 	VolumePath = `/some/path/to/mounted/volume/`
-	PgUser     = "user=postgres"
-	PgPass     = "password=root"
-	PgSsl      = "sslmode=disable"
 	Port       = ":8080"
+
+	PgUser = "thiranger"
+	PgPass = "qwertysegs2140"
+	PgHost = "service-segs-db"
+	PgPort = "5432"
+	PgDB   = "service-segs-db"
+	PgSsl  = "sslmode=disable"
 )
