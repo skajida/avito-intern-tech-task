@@ -9,6 +9,15 @@ services:
       - 5432:5432
     environment:
       - POSTGRES_PASSWORD=root
-    # command: --init-file /docker-entrypoint-initdb.d/init.sql
     volumes:
       - ./pginit.sql:/docker-entrypoint-initdb.d/init.sql
+  segs_svc:
+    container_name: service-segs
+    build:
+      context: ..
+      dockerfile: ./build/service-segs/Dockerfile
+    depends_on:
+      segs_db:
+        condition: service_started
+    ports:
+      - 8080:8080
