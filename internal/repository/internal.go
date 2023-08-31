@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	c "service-segs/internal/model/constants"
 	"service-segs/internal/model/exchange"
 	"strings"
 	"time"
@@ -36,7 +37,7 @@ func (this *IRepository) DeleteSegment(ctx context.Context, segId string) error 
 	if err != nil {
 		return fmt.Errorf(errorTemplate, "delete", err)
 	} else if q, _ := res.RowsAffected(); q == 0 {
-		return fmt.Errorf(errorTemplate, "delete", fmt.Errorf("not found")) // TODO spec custom errors
+		return fmt.Errorf(errorTemplate, "delete", c.NotFound) // TODO spec custom errors
 	}
 	return nil
 }
@@ -67,22 +68,22 @@ func (this *IRepository) SelectBelonging(ctx context.Context, userId int) ([]str
 	return answer, nil
 }
 
+const getSegIdReq = `SELECT seg_id FROM segments WHERE tag = $1;`
+
 func (this *IRepository) validateSegments(ctx context.Context, segments []string) error {
-	const request = `SELECT seg_id FROM segments WHERE tag = $1;`
 	for _, seg := range segments {
 		var exists int8
-		if err := this.database.QueryRowContext(ctx, request, seg).Scan(&exists); err != nil {
-			return fmt.Errorf("invalid segment")
+		if err := this.database.QueryRowContext(ctx, getSegIdReq, seg).Scan(&exists); err != nil {
+			return c.InvalidSegment
 		}
 	}
 	return nil
 }
 
 func (this *IRepository) getSegmentIds(ctx context.Context, segTags []string) (result []int) {
-	const request = `SELECT seg_id FROM segments WHERE tag = $1;`
 	for _, tag := range segTags {
 		var segId int
-		this.database.QueryRowContext(ctx, request, tag).Scan(&segId)
+		this.database.QueryRowContext(ctx, getSegIdReq, tag).Scan(&segId)
 		result = append(result, segId)
 	}
 	return
@@ -109,7 +110,7 @@ func (this *IRepository) UpdateBelonging(
 	`
 
 	if this.validateSegments(ctx, addTo) != nil || this.validateSegments(ctx, removeFrom) != nil {
-		return fmt.Errorf("invalid segment")
+		return c.InvalidSegment
 	}
 	this.database.ExecContext(ctx, updReq, userId, strings.Join(removeFrom, "', '"))
 
@@ -133,7 +134,7 @@ func (this *IRepository) UpdateBelongingTimer(
 	`
 
 	if this.validateSegments(ctx, addTo) != nil || this.validateSegments(ctx, removeFrom) != nil {
-		return fmt.Errorf("invalid segment")
+		return c.InvalidSegment
 	}
 	this.database.ExecContext(ctx, updReq, userId, strings.Join(removeFrom, "', '"), before)
 
@@ -162,7 +163,7 @@ func (this *IRepository) SelectHistory(
 	`
 	rows, err := this.database.QueryContext(ctx, request, userId, from, to)
 	if err != nil {
-		return []exchange.HistoryEntry{}, fmt.Errorf(errorTemplate, "selhist", err)
+		return []exchange.HistoryEntry{}, fmt.Errorf(errorTemplate, "history", err)
 	}
 	defer rows.Close()
 
@@ -197,12 +198,9 @@ func (this *IRepository) SelectHistory(
 }
 
 func (this *IRepository) AutoApply(ctx context.Context, tag string, userIds []int) error {
-	const (
-		selectReq = `SELECT seg_id FROM segments WHERE tag = $1;`
-		insertReq = `INSERT INTO users_segments(user_id, seg_id) VALUES ($1, $2)`
-	)
+	const insertReq = `INSERT INTO users_segments(user_id, seg_id) VALUES ($1, $2)`
 	var segId int
-	this.database.QueryRowContext(ctx, selectReq, tag).Scan(&segId)
+	this.database.QueryRowContext(ctx, getSegIdReq, tag).Scan(&segId)
 	for _, id := range userIds {
 		this.database.ExecContext(ctx, insertReq, id, segId)
 	}

@@ -8,6 +8,8 @@ import (
 	"os"
 	"time"
 
+	c "service-segs/internal/model/constants"
+
 	"github.com/gocarina/gocsv"
 	"github.com/google/uuid"
 )
@@ -134,8 +136,6 @@ func (this *SegmentsService) ModifyBelongingTimer(
 	return nil
 }
 
-const volumePath = `/some/path/to/mounted/volume/`
-
 func (this *SegmentsService) RequestHistory(
 	ctx context.Context,
 	id int,
@@ -147,21 +147,21 @@ func (this *SegmentsService) RequestHistory(
 		return "", fmt.Errorf(errorTemplate, "history", err)
 	}
 	filename := uuid.New().String() + ".csv"
-	clientsFile, err := os.OpenFile(volumePath+filename, os.O_WRONLY|os.O_CREATE, os.ModePerm)
+	clientsFile, err := os.OpenFile(c.VolumePath+filename, os.O_WRONLY|os.O_CREATE, os.ModePerm)
 	if err != nil {
-		return "", fmt.Errorf("internal error")
+		return "", c.InternalError
 	}
 	defer clientsFile.Close()
 	if err = gocsv.MarshalFile(&history, clientsFile); err != nil {
-		return "", fmt.Errorf("internal error")
+		return "", c.InternalError
 	}
 	return filename, nil
 }
 
 func (this *SegmentsService) DownloadFile(ctx context.Context, filename string) ([]byte, error) {
-	file, err := os.OpenFile(volumePath+filename, os.O_RDONLY, os.ModePerm)
+	file, err := os.OpenFile(c.VolumePath+filename, os.O_RDONLY, os.ModePerm)
 	if err != nil {
-		return []byte{}, fmt.Errorf("File not found")
+		return []byte{}, c.NotFound
 	}
 	defer file.Close()
 	return io.ReadAll(file)

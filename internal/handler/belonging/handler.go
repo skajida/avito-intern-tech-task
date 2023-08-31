@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	c "service-segs/internal/model/constants"
 	hrf "service-segs/internal/model/http-response-forms"
 	"strconv"
 	"strings"
@@ -24,7 +25,7 @@ func userIdParse(w http.ResponseWriter, r *http.Request, message string) (int, e
 	userId, err := strconv.Atoi(strings.Split(args[0], "?")[0])
 	if len(args) > 1 || err != nil {
 		hrf.NewErrorResponse(r, message).Send(w, http.StatusUnprocessableEntity)
-		return 0, fmt.Errorf("Wrong user_id format")
+		return 0, c.WrongUser
 	}
 	return userId, nil
 }

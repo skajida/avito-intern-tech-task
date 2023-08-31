@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	c "service-segs/internal/model/constants"
 	hrf "service-segs/internal/model/http-response-forms"
 	"strconv"
 	"strings"
@@ -11,10 +12,10 @@ import (
 )
 
 type HistoryHandler struct {
-	service historian
+	service requester
 }
 
-func NewHandler(svc historian) *HistoryHandler {
+func NewHandler(svc requester) *HistoryHandler {
 	return &HistoryHandler{service: svc}
 }
 
@@ -23,7 +24,7 @@ func userIdParse(w http.ResponseWriter, r *http.Request, message string) (int, e
 	userId, err := strconv.Atoi(strings.Split(args[0], "?")[0])
 	if len(args) > 1 || err != nil {
 		hrf.NewErrorResponse(r, message).Send(w, http.StatusUnprocessableEntity)
-		return 0, fmt.Errorf("Wrong user_id format")
+		return 0, c.WrongUser
 	}
 	return userId, nil
 }
@@ -66,41 +67,10 @@ func requestHandle(service requester, w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonRepr)
 }
 
-func filenameParse(w http.ResponseWriter, r *http.Request, message string) (string, error) {
-	args := strings.Split(r.URL.Path, "/")[2:]
-	if len(args) > 1 {
-		hrf.NewErrorResponse(r, message).Send(w, http.StatusUnprocessableEntity)
-		return "", fmt.Errorf("Wrong request")
-	}
-	return strings.Split(args[0], "?")[0], nil
-}
-
-func downloadHandle(service downloader, w http.ResponseWriter, r *http.Request) {
-	filename, err := filenameParse(w, r, "Filename specified incorrectly")
-	if err != nil {
-		return
-	}
-	if file, err := service.DownloadFile(r.Context(), filename); err != nil {
-		hrf.NewErrorResponse(r, "File not found").Send(w, http.StatusNotFound)
-		return
-	} else {
-		w.Header().Add("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, filename))
-		w.WriteHeader(http.StatusOK)
-		w.Write(file)
-	}
-}
-
 func (this *HistoryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		if handle := strings.Split(r.URL.Path, "/")[1]; handle == "history" {
-			requestHandle(this.service, w, r)
-			return
-		} else if handle == "download" {
-			downloadHandle(this.service, w, r)
-			return
-		}
-		fallthrough
+		requestHandle(this.service, w, r)
 	default:
 		w.Header().Set("Allow", fmt.Sprint(http.MethodPost, ", ", http.MethodDelete))
 		hrf.NewErrorResponse(r, "API doesn't support the method").
