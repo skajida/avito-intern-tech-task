@@ -17,14 +17,15 @@ func NewHandler(svc segmentor) *SegmentsHandler {
 }
 
 type segment struct {
-	SegId string `json:"seg_id"`
+	SegId   string `json:"seg_id"`
+	Percent int    `json:"percent,omitempty"`
 }
 
 func createHandle(service creator, w http.ResponseWriter, r *http.Request) {
 	var requestSegment segment
 	body, _ := io.ReadAll(r.Body) // TODO whats the danger
 	if err := json.Unmarshal(body, &requestSegment); err != nil || requestSegment.SegId == "" {
-		hrf.NewErrorResponse(r, "Segment specified incorrectly").
+		hrf.NewErrorResponse(r, "Input parameters specified incorrectly").
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}

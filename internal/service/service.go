@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"time"
 
@@ -25,6 +26,30 @@ const errorTemplate = "svc %s: %w"
 func (this *SegmentsService) AddSegment(ctx context.Context, tag string) error {
 	if err := this.internal.InsertSegment(ctx, tag); err != nil {
 		return fmt.Errorf(errorTemplate, "add", err)
+	}
+	return nil
+}
+
+func (this *SegmentsService) AddSegmentAutoApply(
+	ctx context.Context,
+	tag string,
+	propotion float64,
+) error {
+	if err := this.internal.InsertSegment(ctx, tag); err != nil {
+		return fmt.Errorf(errorTemplate, "add", err)
+	}
+
+	gen := rand.New(rand.NewSource(time.Now().Unix()))
+	totalUsers := this.external.Count(ctx)
+	userIds := make([]int, 0)
+	for i := 0; i < int(propotion*float64(totalUsers)); i++ {
+		id := gen.Int() % totalUsers
+		if this.external.Exists(ctx, id) {
+			userIds = append(userIds, id)
+		}
+	}
+	if err := this.internal.AutoApply(ctx, tag, userIds); err != nil {
+		return fmt.Errorf(errorTemplate, "auto", err)
 	}
 	return nil
 }

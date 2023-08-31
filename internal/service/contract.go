@@ -22,6 +22,7 @@ type tbelongings interface {
 	UpdateBelonging(context.Context, int, []string, []string) error
 	UpdateBelongingTimer(context.Context, int, []string, []string, time.Time) error
 	SelectHistory(context.Context, int, time.Time, time.Time) ([]exchange.HistoryEntry, error)
+	AutoApply(context.Context, string, []int) error
 }
 
 type irepository interface {

@@ -195,3 +195,16 @@ func (this *IRepository) SelectHistory(
 	}
 	return result, nil
 }
+
+func (this *IRepository) AutoApply(ctx context.Context, tag string, userIds []int) error {
+	const (
+		selectReq = `SELECT seg_id FROM segments WHERE tag = $1;`
+		insertReq = `INSERT INTO users_segments(user_id, seg_id) VALUES ($1, $2)`
+	)
+	var segId int
+	this.database.QueryRowContext(ctx, selectReq, tag).Scan(&segId)
+	for _, id := range userIds {
+		this.database.ExecContext(ctx, insertReq, id, segId)
+	}
+	return nil
+}

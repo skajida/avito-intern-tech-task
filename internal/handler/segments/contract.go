@@ -5,6 +5,7 @@ import "context"
 
 type creator interface {
 	AddSegment(context.Context, string) error
+	AddSegmentAutoApply(context.Context, string, float64) error
 }
 
 type deletor interface {

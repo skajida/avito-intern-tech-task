@@ -53,6 +53,11 @@ paths:
                 seg_id:
                   example: AVITO_DISCOUNT_30
                   type: string
+                percent:
+                  example: 10
+                  minimum: 0
+                  maximum: 100
+                  type: integer
               required:
               - seg_id
               type: object
@@ -71,7 +76,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: Segment specified incorrectly
+          description: Input parameters specified incorrectly
       summary: Creates a segment
       tags:
       - Segments
