@@ -22,4 +22,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - csv_vol:/some/path/to/mounted/volume
+      - segment-segs-csv:/some/path/to/mounted/volume
+
+volumes:
+  segment-segs-csv:
