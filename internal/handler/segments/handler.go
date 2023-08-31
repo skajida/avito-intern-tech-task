@@ -9,11 +9,11 @@ import (
 )
 
 type SegmentsHandler struct {
-	business segmentor
+	service segmentor
 }
 
-func NewHandler(service segmentor) *SegmentsHandler {
-	return &SegmentsHandler{business: service}
+func NewHandler(svc segmentor) *SegmentsHandler {
+	return &SegmentsHandler{service: svc}
 }
 
 type segment struct {
@@ -22,7 +22,7 @@ type segment struct {
 
 func createHandle(service creator, w http.ResponseWriter, r *http.Request) {
 	var requestSegment segment
-	body, _ := io.ReadAll(r.Body) // TODO whats the danger?
+	body, _ := io.ReadAll(r.Body) // TODO whats the danger
 	if err := json.Unmarshal(body, &requestSegment); err != nil || requestSegment.SegId == "" {
 		hrf.NewErrorResponse(r, "Segment specified incorrectly").
 			Send(w, http.StatusUnprocessableEntity)
@@ -36,13 +36,13 @@ func createHandle(service creator, w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteHandle(service deletor, w http.ResponseWriter, r *http.Request) {
-	seg_id := r.FormValue("seg_id") // TODO post/url?
+	seg_id := r.FormValue("seg_id")
 	if seg_id == "" {
 		hrf.NewErrorResponse(r, "Segment specified incorrectly").
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	if err := service.RemoveSegment(r.Context(), seg_id); err != nil {
+	if err := service.DeleteSegment(r.Context(), seg_id); err != nil {
 		hrf.NewErrorResponse(r, "Specified segment doesn't exist").Send(w, http.StatusNotFound)
 	} else {
 		w.WriteHeader(http.StatusOK)
@@ -52,9 +52,9 @@ func deleteHandle(service deletor, w http.ResponseWriter, r *http.Request) {
 func (this *SegmentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		createHandle(this.business, w, r)
+		createHandle(this.service, w, r)
 	case http.MethodDelete:
-		deleteHandle(this.business, w, r)
+		deleteHandle(this.service, w, r)
 	default:
 		w.Header().Set("Allow", fmt.Sprint(http.MethodPost, ", ", http.MethodDelete))
 		hrf.NewErrorResponse(r, "API doesn't support the method").

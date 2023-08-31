@@ -8,7 +8,7 @@ type creator interface {
 }
 
 type deletor interface {
-	RemoveSegment(context.Context, string) error
+	DeleteSegment(context.Context, string) error
 }
 
 type segmentor interface {
