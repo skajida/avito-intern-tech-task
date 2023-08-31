@@ -34,8 +34,8 @@ type activeSegments struct {
 }
 
 func readHandle(service reader, w http.ResponseWriter, r *http.Request) {
-	userId, uierr := userIdParse(w, r, "User specified incorrectly")
-	if uierr != nil {
+	userId, err := userIdParse(w, r, "User specified incorrectly")
+	if err != nil {
 		return
 	}
 	if segments, err := service.ReadBelonging(r.Context(), userId); err != nil {
@@ -54,18 +54,17 @@ type requestSegments struct {
 }
 
 func updateHandle(service modifier, w http.ResponseWriter, r *http.Request) {
-	userId, uierr := userIdParse(w, r, "Input parameters specified incorrectly")
-	if uierr != nil {
+	userId, err := userIdParse(w, r, "Input parameters specified incorrectly")
+	if err != nil {
 		return
 	}
 	var requestSegments requestSegments
 	body, _ := io.ReadAll(r.Body) // TODO whats the danger
-	if err := json.Unmarshal(body, &requestSegments); err != nil {
+	if err = json.Unmarshal(body, &requestSegments); err != nil {
 		hrf.NewErrorResponse(r, "Input parameters specified incorrectly").
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	var err error
 	if before, err := time.Parse(time.RFC3339, r.FormValue("before")); err != nil {
 		err = service.ModifyBelongingTimer(
 			r.Context(),

@@ -33,8 +33,8 @@ type historyUrl struct {
 }
 
 func requestHandle(service requester, w http.ResponseWriter, r *http.Request) {
-	userId, uierr := userIdParse(w, r, "User specified incorrectly")
-	if uierr != nil {
+	userId, err := userIdParse(w, r, "User specified incorrectly")
+	if err != nil {
 		return
 	}
 	year, month := r.FormValue("year"), r.FormValue("month")
@@ -43,19 +43,19 @@ func requestHandle(service requester, w http.ResponseWriter, r *http.Request) {
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	iYear, iyerr := strconv.Atoi(year)
-	iMonth, imerr := strconv.Atoi(month)
-	if iyerr != nil || imerr != nil || iMonth < 1 || iMonth > 12 {
+	iYear, yerr := strconv.Atoi(year)
+	iMonth, merr := strconv.Atoi(month)
+	if yerr != nil || merr != nil || iMonth < 1 || iMonth > 12 {
 		hrf.NewErrorResponse(r, "Input parameters specified incorrectly").
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	url, rerr := service.RequestHistory(
+	url, err := service.RequestHistory(
 		r.Context(),
 		userId,
 		time.Date(iYear, time.Month(iMonth), 1, 0, 0, 0, 0, time.Local),
 	)
-	if rerr != nil {
+	if err != nil {
 		hrf.NewErrorResponse(r, "User doesn't exist").
 			Send(w, http.StatusNotFound)
 		return
