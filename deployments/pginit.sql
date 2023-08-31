@@ -5,7 +5,8 @@ CREATE TABLE segments(
 CREATE TABLE users_segments(
     blg_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INT NOT NULL,
-    seg_id INT NOT NULL REFERENCES segments(seg_id),
+    seg_id INT NOT NULL,
     create_time TIMESTAMPTZ DEFAULT NOW(),
-    remove_time TIMESTAMPTZ
+    remove_time TIMESTAMPTZ,
+    FOREIGN KEY (seg_id) REFERENCES segments(seg_id)
 );
