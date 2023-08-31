@@ -20,12 +20,12 @@ func NewHandler(svc belonger) *BelongingHandler {
 
 func userIdParse(w http.ResponseWriter, r *http.Request, message string) (int, error) {
 	args := strings.Split(r.URL.Path, "/")[2:]
-	user_id, err := strconv.Atoi(strings.Split(args[0], "?")[0])
+	userId, err := strconv.Atoi(strings.Split(args[0], "?")[0])
 	if len(args) > 1 || err != nil {
 		hrf.NewErrorResponse(r, message).Send(w, http.StatusUnprocessableEntity)
 		return 0, fmt.Errorf("Wrong user_id format")
 	}
-	return user_id, nil
+	return userId, nil
 }
 
 type activeSegments struct {
@@ -33,17 +33,17 @@ type activeSegments struct {
 }
 
 func readHandle(service reader, w http.ResponseWriter, r *http.Request) {
-	user_id, uierr := userIdParse(w, r, "User specified incorrectly")
+	userId, uierr := userIdParse(w, r, "User specified incorrectly")
 	if uierr != nil {
 		return
 	}
-	if segments, err := service.ReadBelonging(r.Context(), user_id); err != nil {
+	if segments, err := service.ReadBelonging(r.Context(), userId); err != nil {
 		hrf.NewErrorResponse(r, "User doesn't exist").Send(w, http.StatusNotFound)
 	} else {
-		json_repr, _ := json.Marshal(activeSegments{ActiveUserSegments: segments})
+		jsonRepr, _ := json.Marshal(activeSegments{ActiveUserSegments: segments})
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write(json_repr)
+		w.Write(jsonRepr)
 	}
 }
 
@@ -53,7 +53,7 @@ type requestSegments struct {
 }
 
 func updateHandle(service modifier, w http.ResponseWriter, r *http.Request) {
-	user_id, uierr := userIdParse(w, r, "Input parameters specified incorrectly")
+	userId, uierr := userIdParse(w, r, "Input parameters specified incorrectly")
 	if uierr != nil {
 		return
 	}
@@ -64,7 +64,7 @@ func updateHandle(service modifier, w http.ResponseWriter, r *http.Request) {
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	if err := service.ModifyBelonging(r.Context(), user_id, requestSegments.WantedSegments, requestSegments.UnwantedSegments); err != nil {
+	if err := service.ModifyBelonging(r.Context(), userId, requestSegments.WantedSegments, requestSegments.UnwantedSegments); err != nil {
 		switch err {
 		// case: User doesn't exist
 		default: // TODO different errors

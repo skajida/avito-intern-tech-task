@@ -20,18 +20,18 @@ func NewIRepository(db *sql.DB) *IRepository {
 
 const errorTemplate = "repo %s: %w"
 
-func (this *IRepository) InsertSegment(ctx context.Context, seg_id string) error {
+func (this *IRepository) InsertSegment(ctx context.Context, segId string) error {
 	const request = `INSERT INTO segments(tag) VALUES($1);`
-	_, err := this.database.ExecContext(ctx, request, seg_id)
+	_, err := this.database.ExecContext(ctx, request, segId)
 	if err != nil {
 		return fmt.Errorf(errorTemplate, "create", err)
 	}
 	return nil
 }
 
-func (this *IRepository) DeleteSegment(ctx context.Context, seg_id string) error {
+func (this *IRepository) DeleteSegment(ctx context.Context, segId string) error {
 	const request = `DELETE FROM segments WHERE tag = $1;`
-	res, err := this.database.ExecContext(ctx, request, seg_id)
+	res, err := this.database.ExecContext(ctx, request, segId)
 	if err != nil {
 		return fmt.Errorf(errorTemplate, "delete", err)
 	} else if q, _ := res.RowsAffected(); q == 0 {

@@ -36,13 +36,13 @@ func createHandle(service creator, w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteHandle(service deletor, w http.ResponseWriter, r *http.Request) {
-	seg_id := r.FormValue("seg_id")
-	if seg_id == "" {
+	segId := r.FormValue("seg_id")
+	if segId == "" {
 		hrf.NewErrorResponse(r, "Segment specified incorrectly").
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	if err := service.DeleteSegment(r.Context(), seg_id); err != nil {
+	if err := service.DeleteSegment(r.Context(), segId); err != nil {
 		hrf.NewErrorResponse(r, "Specified segment doesn't exist").Send(w, http.StatusNotFound)
 	} else {
 		w.WriteHeader(http.StatusOK)
