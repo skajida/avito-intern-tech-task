@@ -3,6 +3,7 @@ package service
 
 import (
 	"context"
+	"service-segs/internal/model/exchange"
 	"time"
 )
 
@@ -16,17 +17,10 @@ type tsegments interface {
 	DeleteSegment(context.Context, string) error
 }
 
-type HistoryEntry struct {
-	UserId    int       `csv:"user_id"`
-	SegTag    string    `csv:"seg_id"`
-	Operation string    `csv:"operation"`
-	Time      time.Time `csv:"timestamp"`
-}
-
 type tbelongings interface {
 	SelectBelonging(context.Context, int) ([]string, error)
 	UpdateBelonging(context.Context, int, []string, []string) error
-	SelectHistory(context.Context, int, time.Time, time.Time) ([]HistoryEntry, error)
+	SelectHistory(context.Context, int, time.Time, time.Time) ([]exchange.HistoryEntry, error)
 }
 
 type irepository interface {
