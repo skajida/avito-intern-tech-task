@@ -4,8 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"service-segs/internal/model/exchange"
 	"strconv"
 	"strings"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -120,4 +122,55 @@ func (this *IRepository) UpdateBelonging(
 	}
 
 	return nil
+}
+
+func (this *IRepository) SelectHistory(
+	ctx context.Context,
+	userId int,
+	from time.Time,
+	to time.Time,
+) ([]exchange.HistoryEntry, error) {
+	const request = `
+	SELECT user_id, tag, create_time, remove_time
+	FROM segments s INNER JOIN users_segments u
+	ON
+		s.seg_id = u.seg_id AND
+		u.user_id = $1 AND
+			($2 < create_time AND create_time < $3 OR
+			remove_time IS NOT NULL AND $2 < remove_time AND remove_time < $3);
+	`
+	rows, err := this.database.QueryContext(ctx, request, userId, from, to)
+	if err != nil {
+		return []exchange.HistoryEntry{}, fmt.Errorf(errorTemplate, "selhist", err)
+	}
+	defer rows.Close()
+
+	result := make([]exchange.HistoryEntry, 0)
+	item := &struct {
+		userId     int
+		segTag     string
+		createTime time.Time
+		removeTime sql.NullTime
+	}{}
+	for rows.Next() {
+		rows.Scan(&item.userId, &item.segTag, &item.createTime, &item.removeTime)
+		if item.createTime.After(from) && item.createTime.Before(to) {
+			result = append(result, exchange.HistoryEntry{
+				UserId:    item.userId,
+				SegTag:    item.segTag,
+				Operation: "add",
+				Time:      item.createTime,
+			})
+		}
+		if item.removeTime.Valid && item.removeTime.Time.After(from) &&
+			item.removeTime.Time.Before(to) {
+			result = append(result, exchange.HistoryEntry{
+				UserId:    item.userId,
+				SegTag:    item.segTag,
+				Operation: "remove",
+				Time:      item.removeTime.Time,
+			})
+		}
+	}
+	return result, nil
 }
