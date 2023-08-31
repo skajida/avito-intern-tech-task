@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"time"
 
@@ -87,12 +88,13 @@ func (this *SegmentsService) ModifyBelonging(
 	return nil
 }
 
+const volumePath = `/some/path/to/mounted/volume/`
+
 func (this *SegmentsService) SelectHistory(
 	ctx context.Context,
 	id int,
 	start time.Time,
 ) (string, error) {
-	const volumePath = `/some/path/to/mounted/volume/`
 	end := time.Date(start.Year(), start.Month(), 1, 0, 0, 0, 0, time.Local)
 	history, err := this.internal.SelectHistory(ctx, id, start, end)
 	if err != nil {
@@ -103,8 +105,18 @@ func (this *SegmentsService) SelectHistory(
 	if err != nil {
 		return "", fmt.Errorf("internal error")
 	}
+	defer clientsFile.Close()
 	if err = gocsv.MarshalFile(&history, clientsFile); err != nil {
 		return "", fmt.Errorf("internal error")
 	}
 	return filename, nil
+}
+
+func (this *SegmentsService) DownloadFile(ctx context.Context, filename string) ([]byte, error) {
+	file, err := os.OpenFile(volumePath+filename, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		return []byte{}, fmt.Errorf("File not found")
+	}
+	defer file.Close()
+	return io.ReadAll(file)
 }

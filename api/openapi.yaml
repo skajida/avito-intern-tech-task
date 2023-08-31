@@ -197,7 +197,6 @@ paths:
           schema:
             example: 2023
             type: integer
-          style: simple
         - description: The year of requested period
           explode: false
           in: query
@@ -208,7 +207,6 @@ paths:
             minimum: 1
             maximum: 12
             type: integer
-          style: simple
       responses:
         "200":
           content:
@@ -235,6 +233,31 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: Input parameters specified incorrectly
       summary: Returns segments belonging history
+      tags:
+      - History
+  /download/{filename}:
+    get:
+      operationId: getHistoryFile
+      parameters:
+        - description: CSV filename
+          explode: false
+          in: path
+          name: filename
+          required: true
+          schema:
+            type: string
+            example: fe56482a-1ca0-440b-9654-26cc4dc6feb7.csv
+          style: simple
+      responses:
+        "200":
+          content:
+            text/csv: {}
+          description: File found successfully
+        "404":
+          description: File not found
+        "422":
+          description: Filename specified incorrectly
+      summary: Returns history csv file
       tags:
       - History
 components:
