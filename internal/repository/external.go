@@ -2,7 +2,7 @@ package repository
 
 import "context"
 
-const totalEntries = 10_000
+const totalEntries = 1_000
 
 // dummy emulation of the behaviour of an external service containing users database
 type ERepository struct {
