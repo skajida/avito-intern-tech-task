@@ -14,7 +14,7 @@ services:
       - 5432:5432
     volumes:
       - ./pginit.sql:/docker-entrypoint-initdb.d/init.sql
-      - segment-segs-dbvol:/var/lib/postgresql/data/pgdata
+      - service-segs-dbvol:/var/lib/postgresql/data/pgdata
   segs_svc:
     container_name: service-segs
     build:
@@ -26,8 +26,8 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - segment-segs-csv:/some/path/to/mounted/volume
+      - service-segs-csv:/some/path/to/mounted/volume
 
 volumes:
-  segment-segs-dbvol:
-  segment-segs-csv:
+  service-segs-dbvol:
+  service-segs-csv:
