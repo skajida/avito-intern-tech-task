@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"service-segs/internal/model/exchange"
-	"strconv"
 	"strings"
 	"time"
 
@@ -89,32 +88,54 @@ func (this *IRepository) getSegmentIds(ctx context.Context, segTags []string) (r
 	return
 }
 
+const updReq = `
+UPDATE users_segments u
+SET remove_time = NOW()
+FROM segments s
+WHERE
+	user_id = $1 AND
+	(remove_time IS NULL OR NOW() < remove_time) AND
+	u.seg_id = s.seg_id AND
+	tag IN ($2);`
+
 func (this *IRepository) UpdateBelonging(
 	ctx context.Context,
 	userId int,
 	addTo, removeFrom []string,
 ) error {
-	const (
-		updReq = `
-	UPDATE users_segments u
-	SET remove_time = NOW()
-	FROM segments s
-	WHERE
-		user_id = $1 AND
-		(remove_time IS NULL OR NOW() < remove_time) AND
-		u.seg_id = s.seg_id AND
-		tag IN ($2);
-	`
-		insReq = `
+	const insReq = `
 	INSERT INTO users_segments (user_id, seg_id)
 	VALUES ($1, $2);
 	`
-	)
 
 	if this.validateSegments(ctx, addTo) != nil || this.validateSegments(ctx, removeFrom) != nil {
 		return fmt.Errorf("invalid segment")
 	}
-	this.database.ExecContext(ctx, updReq, strconv.Itoa(userId), strings.Join(removeFrom, "', '"))
+	this.database.ExecContext(ctx, updReq, userId, strings.Join(removeFrom, "', '"))
+
+	segIds := this.getSegmentIds(ctx, addTo)
+	for _, id := range segIds {
+		this.database.ExecContext(ctx, insReq, userId, id)
+	}
+
+	return nil
+}
+
+func (this *IRepository) UpdateBelongingTimer(
+	ctx context.Context,
+	userId int,
+	addTo, removeFrom []string,
+	before time.Time,
+) error {
+	const insReq = `
+	INSERT INTO users_segments (user_id, seg_id, remove_time)
+	VALUES ($1, $2, $3);
+	`
+
+	if this.validateSegments(ctx, addTo) != nil || this.validateSegments(ctx, removeFrom) != nil {
+		return fmt.Errorf("invalid segment")
+	}
+	this.database.ExecContext(ctx, updReq, userId, strings.Join(removeFrom, "', '"), before)
 
 	segIds := this.getSegmentIds(ctx, addTo)
 	for _, id := range segIds {

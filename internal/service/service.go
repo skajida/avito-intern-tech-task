@@ -68,20 +68,41 @@ func diff(minuend, subtrahend []string) (result []string) {
 	return
 }
 
+func (this *SegmentsService) modify(ctx context.Context, id *int, add, delete *[]string) error {
+	*add = unique(*add)
+	*delete = diff(unique(*delete), *add)
+	exist, selErr := this.internal.SelectBelonging(ctx, *id)
+	if selErr != nil {
+		return fmt.Errorf(errorTemplate, "modify", selErr)
+	}
+	*add = diff(*add, exist)
+	return nil
+}
+
 // deleting FIRST adding AFTER
 func (this *SegmentsService) ModifyBelonging(
 	ctx context.Context,
 	id int,
-	add,
-	delete []string,
+	add, delete []string,
 ) error {
-	add = unique(add)
-	delete = diff(unique(delete), add)
-	exist, selErr := this.internal.SelectBelonging(ctx, id)
-	if selErr != nil {
-		return fmt.Errorf(errorTemplate, "modify", selErr)
+	if err := this.modify(ctx, &id, &add, &delete); err != nil {
+		return err
 	}
-	add = diff(add, exist)
+	if err := this.internal.UpdateBelonging(ctx, id, add, delete); err != nil {
+		return fmt.Errorf(errorTemplate, "modify", err)
+	}
+	return nil
+}
+
+func (this *SegmentsService) ModifyBelongingTimer(
+	ctx context.Context,
+	id int,
+	add, delete []string,
+	before time.Time,
+) error {
+	if err := this.modify(ctx, &id, &add, &delete); err != nil {
+		return err
+	}
 	if err := this.internal.UpdateBelonging(ctx, id, add, delete); err != nil {
 		return fmt.Errorf(errorTemplate, "modify", err)
 	}
@@ -90,7 +111,7 @@ func (this *SegmentsService) ModifyBelonging(
 
 const volumePath = `/some/path/to/mounted/volume/`
 
-func (this *SegmentsService) SelectHistory(
+func (this *SegmentsService) RequestHistory(
 	ctx context.Context,
 	id int,
 	start time.Time,

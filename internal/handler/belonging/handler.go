@@ -8,6 +8,7 @@ import (
 	hrf "service-segs/internal/model/http-response-forms"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type BelongingHandler struct {
@@ -64,7 +65,24 @@ func updateHandle(service modifier, w http.ResponseWriter, r *http.Request) {
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	if err := service.ModifyBelonging(r.Context(), userId, requestSegments.WantedSegments, requestSegments.UnwantedSegments); err != nil {
+	var err error
+	if before, err := time.Parse(time.RFC3339, r.FormValue("before")); err != nil {
+		err = service.ModifyBelongingTimer(
+			r.Context(),
+			userId,
+			requestSegments.WantedSegments,
+			requestSegments.UnwantedSegments,
+			before,
+		)
+	} else {
+		err = service.ModifyBelonging(
+			r.Context(),
+			userId,
+			requestSegments.WantedSegments,
+			requestSegments.UnwantedSegments,
+		)
+	}
+	if err != nil {
 		switch err {
 		// case: User doesn't exist
 		default: // TODO different errors

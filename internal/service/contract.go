@@ -20,6 +20,7 @@ type tsegments interface {
 type tbelongings interface {
 	SelectBelonging(context.Context, int) ([]string, error)
 	UpdateBelonging(context.Context, int, []string, []string) error
+	UpdateBelongingTimer(context.Context, int, []string, []string, time.Time) error
 	SelectHistory(context.Context, int, time.Time, time.Time) ([]exchange.HistoryEntry, error)
 }
 

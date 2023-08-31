@@ -130,6 +130,14 @@ paths:
         schema:
           $ref: '#/components/schemas/UserId'
         style: simple
+      - description: Deletion timestamp
+        in: query
+        name: before
+        required: false
+        schema:
+          example: 2008-03-03T04:47:34+0000
+          format: RFC3339
+          type: string
       requestBody:
         content:
           application/json:
