@@ -108,9 +108,7 @@ func (this *SegmentsService) ModifyBelonging(
 		return fmt.Errorf(errorTemplate, "modify", selErr)
 	}
 	add = diff(add, exist)
-	fmt.Println(add, delete)
 	if err := this.internal.UpdateBelonging(ctx, id, add, delete); err != nil {
-		fmt.Println(fmt.Errorf(errorTemplate, "modify", err))
 		return fmt.Errorf(errorTemplate, "modify", err)
 	}
 	return nil
