@@ -37,7 +37,7 @@ func (this *IRepository) DeleteSegment(ctx context.Context, segId string) error 
 	if err != nil {
 		return fmt.Errorf(errorTemplate, "delete", err)
 	} else if q, _ := res.RowsAffected(); q == 0 {
-		return fmt.Errorf(errorTemplate, "delete", c.NotFound) // TODO spec custom errors
+		return fmt.Errorf(errorTemplate, "delete", c.NotFound)
 	}
 	return nil
 }
@@ -76,6 +76,7 @@ func (this *IRepository) validateSegments(ctx context.Context, segments []string
 		if err := this.database.QueryRowContext(ctx, getSegIdReq, seg).Scan(&exists); err != nil {
 			return c.InvalidSegment
 		}
+		fmt.Println(seg, exists)
 	}
 	return nil
 }
@@ -110,6 +111,7 @@ func (this *IRepository) UpdateBelonging(
 	`
 
 	if this.validateSegments(ctx, addTo) != nil || this.validateSegments(ctx, removeFrom) != nil {
+		fmt.Println("repo", c.InvalidSegment)
 		return c.InvalidSegment
 	}
 	this.database.ExecContext(ctx, updReq, userId, strings.Join(removeFrom, "', '"))

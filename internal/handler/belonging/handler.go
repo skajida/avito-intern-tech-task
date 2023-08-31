@@ -2,6 +2,7 @@ package belonging
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -60,36 +61,62 @@ func updateHandle(service modifier, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var requestSegments requestSegments
-	body, _ := io.ReadAll(r.Body) // TODO whats the danger
+	body, _ := io.ReadAll(r.Body)
 	if err = json.Unmarshal(body, &requestSegments); err != nil {
 		hrf.NewErrorResponse(r, "Input parameters specified incorrectly").
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	if before, err := time.Parse(time.RFC3339, r.FormValue("before")); err != nil {
-		err = service.ModifyBelongingTimer(
-			r.Context(),
-			userId,
-			requestSegments.WantedSegments,
-			requestSegments.UnwantedSegments,
-			before,
-		)
-	} else {
-		err = service.ModifyBelonging(
-			r.Context(),
-			userId,
-			requestSegments.WantedSegments,
-			requestSegments.UnwantedSegments,
-		)
+	err = service.ModifyBelonging(
+		r.Context(),
+		userId,
+		requestSegments.WantedSegments,
+		requestSegments.UnwantedSegments,
+	)
+	switch {
+	case errors.Is(err, c.InvalidSegment):
+		hrf.NewErrorResponse(r, "Specified segment doesn't exist").
+			Send(w, http.StatusBadRequest)
+	case errors.Is(err, c.NotFound):
+		hrf.NewErrorResponse(r, "User doesn't exist").
+			Send(w, http.StatusNotFound)
+	case errors.Is(err, nil):
+		w.WriteHeader(http.StatusOK)
 	}
+}
+
+func updateHandleTimer(service modifier, w http.ResponseWriter, r *http.Request) {
+	userId, err := userIdParse(w, r, "Input parameters specified incorrectly")
 	if err != nil {
-		switch err {
-		// case: User doesn't exist
-		default: // TODO different errors
-			hrf.NewErrorResponse(r, "Specified segment doesn't exist").
-				Send(w, http.StatusBadRequest)
-		}
-	} else {
+		return
+	}
+	var requestSegments requestSegments
+	body, _ := io.ReadAll(r.Body)
+	if err = json.Unmarshal(body, &requestSegments); err != nil {
+		hrf.NewErrorResponse(r, "Input parameters specified incorrectly").
+			Send(w, http.StatusUnprocessableEntity)
+		return
+	}
+	before, err := time.Parse(time.RFC3339, r.FormValue("before"))
+	if err != nil {
+		hrf.NewErrorResponse(r, "Input parameters specified incorrectly").
+			Send(w, http.StatusUnprocessableEntity)
+	}
+	err = service.ModifyBelongingTimer(
+		r.Context(),
+		userId,
+		requestSegments.WantedSegments,
+		requestSegments.UnwantedSegments,
+		before,
+	)
+	switch {
+	case errors.Is(err, c.InvalidSegment):
+		hrf.NewErrorResponse(r, "Specified segment doesn't exist").
+			Send(w, http.StatusBadRequest)
+	case errors.Is(err, c.NotFound):
+		hrf.NewErrorResponse(r, "User doesn't exist").
+			Send(w, http.StatusNotFound)
+	case errors.Is(err, nil):
 		w.WriteHeader(http.StatusOK)
 	}
 }
@@ -99,7 +126,11 @@ func (this *BelongingHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	case http.MethodGet:
 		readHandle(this.service, w, r)
 	case http.MethodPut:
-		updateHandle(this.service, w, r)
+		if r.FormValue("before") != "" {
+			updateHandleTimer(this.service, w, r)
+		} else {
+			updateHandle(this.service, w, r)
+		}
 	default:
 		w.Header().Set("Allow", fmt.Sprint(http.MethodPost, ", ", http.MethodDelete))
 		hrf.NewErrorResponse(r, "API doesn't support the method").

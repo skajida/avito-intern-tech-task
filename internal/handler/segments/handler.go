@@ -23,7 +23,7 @@ type segment struct {
 
 func createHandle(service creator, w http.ResponseWriter, r *http.Request) {
 	var requestSegment segment
-	body, _ := io.ReadAll(r.Body) // TODO whats the danger
+	body, _ := io.ReadAll(r.Body)
 	if err := json.Unmarshal(body, &requestSegment); err != nil || requestSegment.SegId == "" {
 		hrf.NewErrorResponse(r, "Input parameters specified incorrectly").
 			Send(w, http.StatusUnprocessableEntity)

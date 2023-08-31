@@ -95,27 +95,22 @@ func diff(minuend, subtrahend []string) (result []string) {
 	return
 }
 
-func (this *SegmentsService) modify(ctx context.Context, id *int, add, delete *[]string) error {
-	*add = unique(*add)
-	*delete = diff(unique(*delete), *add)
-	exist, selErr := this.internal.SelectBelonging(ctx, *id)
-	if selErr != nil {
-		return fmt.Errorf(errorTemplate, "modify", selErr)
-	}
-	*add = diff(*add, exist)
-	return nil
-}
-
 // deleting FIRST adding AFTER
 func (this *SegmentsService) ModifyBelonging(
 	ctx context.Context,
 	id int,
 	add, delete []string,
 ) error {
-	if err := this.modify(ctx, &id, &add, &delete); err != nil {
-		return err
+	add = unique(add)
+	delete = diff(unique(delete), add)
+	exist, selErr := this.internal.SelectBelonging(ctx, id)
+	if selErr != nil {
+		return fmt.Errorf(errorTemplate, "modify", selErr)
 	}
+	add = diff(add, exist)
+	fmt.Println(add, delete)
 	if err := this.internal.UpdateBelonging(ctx, id, add, delete); err != nil {
+		fmt.Println(fmt.Errorf(errorTemplate, "modify", err))
 		return fmt.Errorf(errorTemplate, "modify", err)
 	}
 	return nil
@@ -127,10 +122,14 @@ func (this *SegmentsService) ModifyBelongingTimer(
 	add, delete []string,
 	before time.Time,
 ) error {
-	if err := this.modify(ctx, &id, &add, &delete); err != nil {
-		return err
+	add = unique(add)
+	delete = diff(unique(delete), add)
+	exist, selErr := this.internal.SelectBelonging(ctx, id)
+	if selErr != nil {
+		return fmt.Errorf(errorTemplate, "modify timer", selErr)
 	}
-	if err := this.internal.UpdateBelonging(ctx, id, add, delete); err != nil {
+	add = diff(add, exist)
+	if err := this.internal.UpdateBelongingTimer(ctx, id, add, delete, before); err != nil {
 		return fmt.Errorf(errorTemplate, "modify", err)
 	}
 	return nil
