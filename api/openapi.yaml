@@ -177,6 +177,66 @@ paths:
       summary: Updates segments to user
       tags:
       - Users
+  /history/{user_id}:
+    get:
+      operationId: getUserHistory
+      parameters:
+        - description: User identifier
+          explode: false
+          in: path
+          name: user_id
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserId'
+          style: simple
+        - description: The year of requested period
+          explode: false
+          in: query
+          name: year
+          required: true
+          schema:
+            example: 2023
+            type: integer
+          style: simple
+        - description: The year of requested period
+          explode: false
+          in: query
+          name: month
+          required: true
+          schema:
+            example: 8
+            minimum: 1
+            maximum: 12
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  url:
+                    example: '/download/2358988e-954e-4d35-aab0-084d5b57c6c1.csv'
+                    type: string
+                required:
+                  - url
+                type: object
+          description: Returned url to history file
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: User doesn't exist
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Input parameters specified incorrectly
+      summary: Returns segments belonging history
+      tags:
+      - History
 components:
   schemas:
     UserId:
