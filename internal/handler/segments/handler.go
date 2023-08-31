@@ -29,11 +29,27 @@ func createHandle(service creator, w http.ResponseWriter, r *http.Request) {
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	if err := service.AddSegment(r.Context(), requestSegment.SegId); err != nil {
-		hrf.NewErrorResponse(r, "Specified segment already exists").Send(w, http.StatusBadRequest)
-	} else {
-		w.WriteHeader(http.StatusCreated)
+	switch {
+	case requestSegment.Percent > 0:
+		if err := service.AddSegmentAutoApply(
+			r.Context(),
+			requestSegment.SegId,
+			float64(requestSegment.Percent)/100.0,
+		); err != nil {
+			hrf.NewErrorResponse(r, "Specified segment already exists").
+				Send(w, http.StatusBadRequest)
+		} else {
+			w.WriteHeader(http.StatusCreated)
+		}
+	default:
+		if err := service.AddSegment(r.Context(), requestSegment.SegId); err != nil {
+			hrf.NewErrorResponse(r, "Specified segment already exists").
+				Send(w, http.StatusBadRequest)
+		} else {
+			w.WriteHeader(http.StatusCreated)
+		}
 	}
+
 }
 
 func deleteHandle(service deletor, w http.ResponseWriter, r *http.Request) {

@@ -136,11 +136,11 @@ func (this *IRepository) UpdateBelongingTimer(
 	if this.validateSegments(ctx, addTo) != nil || this.validateSegments(ctx, removeFrom) != nil {
 		return c.InvalidSegment
 	}
-	this.database.ExecContext(ctx, updReq, userId, strings.Join(removeFrom, "', '"), before)
+	this.database.ExecContext(ctx, updReq, userId, strings.Join(removeFrom, "', '"))
 
 	segIds := this.getSegmentIds(ctx, addTo)
 	for _, id := range segIds {
-		this.database.ExecContext(ctx, insReq, userId, id)
+		this.database.ExecContext(ctx, insReq, userId, id, before)
 	}
 
 	return nil
