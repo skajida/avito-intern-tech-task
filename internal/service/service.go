@@ -63,9 +63,19 @@ func diff(minuend, subtrahend []string) (result []string) {
 }
 
 // deleting FIRST adding AFTER
-func (this *SegmentsService) ModifyBelonging(ctx context.Context, id int, add, delete []string) error {
+func (this *SegmentsService) ModifyBelonging(
+	ctx context.Context,
+	id int,
+	add,
+	delete []string,
+) error {
 	add = unique(add)
 	delete = diff(unique(delete), add)
+	exist, selErr := this.internal.SelectBelonging(ctx, id)
+	if selErr != nil {
+		return fmt.Errorf(errorTemplate, "modify", selErr)
+	}
+	add = diff(add, exist)
 	if err := this.internal.UpdateBelonging(ctx, id, add, delete); err != nil {
 		return fmt.Errorf(errorTemplate, "modify", err)
 	}
