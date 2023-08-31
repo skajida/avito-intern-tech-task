@@ -61,7 +61,7 @@ func requestHandle(service requester, w http.ResponseWriter, r *http.Request) {
 			Send(w, http.StatusNotFound)
 		return
 	}
-	jsonRepr, _ := json.Marshal(historyUrl{Url: url})
+	jsonRepr, _ := json.Marshal(historyUrl{Url: "/download/" + url})
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(jsonRepr)
