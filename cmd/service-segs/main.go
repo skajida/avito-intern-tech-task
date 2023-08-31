@@ -16,7 +16,9 @@ import (
 )
 
 func main() {
-	database, err := sql.Open("postgres", fmt.Sprintf("%s %s %s", c.PgUser, c.PgPass, c.PgSsl))
+	dbUrl := fmt.Sprintf("postgres://%v:%v@%v:%v/%v?%v",
+		c.PgUser, c.PgPass, c.PgHost, c.PgPort, c.PgDB, c.PgSsl)
+	database, err := sql.Open("postgres", dbUrl)
 	if err != nil {
 		log.Fatalln(err)
 	}
