@@ -50,7 +50,11 @@ func requestHandler(service requester, w http.ResponseWriter, r *http.Request) {
 			Send(w, http.StatusUnprocessableEntity)
 		return
 	}
-	url, rerr := service.RequestHistory(r.Context(), userId, time.Date(iYear, time.Month(iMonth), 1, 0, 0, 0, 0, time.Local))
+	url, rerr := service.RequestHistory(
+		r.Context(),
+		userId,
+		time.Date(iYear, time.Month(iMonth), 1, 0, 0, 0, 0, time.Local),
+	)
 	if rerr != nil {
 		hrf.NewErrorResponse(r, "User doesn't exist").
 			Send(w, http.StatusNotFound)

@@ -87,7 +87,11 @@ func (this *SegmentsService) ModifyBelonging(
 	return nil
 }
 
-func (this *SegmentsService) SelectHistory(ctx context.Context, id int, start time.Time) (string, error) {
+func (this *SegmentsService) SelectHistory(
+	ctx context.Context,
+	id int,
+	start time.Time,
+) (string, error) {
 	const volumePath = `/some/path/to/mounted/volume`
 	end := time.Date(start.Year(), start.Month(), 1, 0, 0, 0, 0, time.Local)
 	history, err := this.internal.SelectHistory(ctx, id, start, end)
