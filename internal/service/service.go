@@ -3,6 +3,11 @@ package service
 import (
 	"context"
 	"fmt"
+	"os"
+	"time"
+
+	"github.com/gocarina/gocsv"
+	"github.com/google/uuid"
 )
 
 type SegmentsService struct {
@@ -80,4 +85,22 @@ func (this *SegmentsService) ModifyBelonging(
 		return fmt.Errorf(errorTemplate, "modify", err)
 	}
 	return nil
+}
+
+func (this *SegmentsService) SelectHistory(ctx context.Context, id int, start time.Time) (string, error) {
+	const volumePath = `/some/path/to/mounted/volume`
+	end := time.Date(start.Year(), start.Month(), 1, 0, 0, 0, 0, time.Local)
+	history, err := this.internal.SelectHistory(ctx, id, start, end)
+	if err != nil {
+		return "", fmt.Errorf(errorTemplate, "history", err)
+	}
+	filename := uuid.New().String() + ".csv"
+	clientsFile, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, os.ModePerm)
+	if err != nil {
+		return "", fmt.Errorf("internal error")
+	}
+	if err = gocsv.MarshalFile(&history, clientsFile); err != nil {
+		return "", fmt.Errorf("internal error")
+	}
+	return filename, nil
 }
