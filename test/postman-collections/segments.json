@@ -1,0 +1,830 @@
+{
+	"info": {
+		"_postman_id": "074c0e9e-827a-47f0-8c8a-e3308672c666",
+		"name": "segments",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29442263"
+	},
+	"item": [
+		{
+			"name": "add50",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"seg_id\":\"AVITO_DISCOUNT_50\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/segs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "add50",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"seg_id\":\"AVITO_DISCOUNT_50\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/segs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:15:29 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "addVoice",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"seg_id\":\"AVITO_VOICE_MESSAGES\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/segs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "addVoice",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"seg_id\":\"AVITO_VOICE_MESSAGES\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/segs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:15:37 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "addPerf",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"seg_id\":\"AVITO_PERFORMANCE_VAS\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/segs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "addPerf",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"seg_id\":\"AVITO_PERFORMANCE_VAS\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/segs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:15:43 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "add30",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"seg_id\":\"AVITO_DISCOUNT_30\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/segs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "add30",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"seg_id\":\"AVITO_DISCOUNT_30\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/segs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:15:50 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "delete50",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/segs?seg_id=AVITO_DISCOUNT_50",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					],
+					"query": [
+						{
+							"key": "seg_id",
+							"value": "AVITO_DISCOUNT_50"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "delete50",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/segs?seg_id=AVITO_DISCOUNT_50",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							],
+							"query": [
+								{
+									"key": "seg_id",
+									"value": "AVITO_DISCOUNT_50"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:15:56 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "add25",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"seg_id\":\"AVITO_DISCOUNT_25\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/segs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "add25",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"seg_id\":\"AVITO_DISCOUNT_25\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/segs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:16:03 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "notAllowed",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/segs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "notAllowed",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/segs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							]
+						}
+					},
+					"status": "Method Not Allowed",
+					"code": 405,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Allow",
+							"value": "POST, DELETE"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:16:08 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "153"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"title\": \"API doesn't support the method\",\n    \"request\": \"GET /segs\",\n    \"time\": \"2023-08-31T11:16:08+03:00\",\n    \"errorTraceId\": \"eff4a399-22af-4c2e-86c4-3c7fe2824041\"\n}"
+				}
+			]
+		},
+		{
+			"name": "emptySeg",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"seg_id\": \"\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/segs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "emptySeg",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"seg_id\": \"\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/segs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							]
+						}
+					},
+					"status": "Unprocessable Entity",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:16:14 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "153"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"title\": \"Segment specified incorrectly\",\n    \"request\": \"POST /segs\",\n    \"time\": \"2023-08-31T11:16:14+03:00\",\n    \"errorTraceId\": \"4e8b18eb-d762-49bb-a392-62ebfc83eb74\"\n}"
+				}
+			]
+		},
+		{
+			"name": "wrongKey",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/segs?seg_od=AVITO_DISCOUNT_50",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					],
+					"query": [
+						{
+							"key": "seg_od",
+							"value": "AVITO_DISCOUNT_50"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "wrongKey",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/segs?seg_od=AVITO_DISCOUNT_50",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							],
+							"query": [
+								{
+									"key": "seg_od",
+									"value": "AVITO_DISCOUNT_50"
+								}
+							]
+						}
+					},
+					"status": "Unprocessable Entity",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:16:23 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "180"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"title\": \"Segment specified incorrectly\",\n    \"request\": \"DELETE /segs?seg_od=AVITO_DISCOUNT_50\",\n    \"time\": \"2023-08-31T11:16:23+03:00\",\n    \"errorTraceId\": \"5f2b01c8-7a87-4287-a59a-2e1b0c26bffc\"\n}"
+				}
+			]
+		},
+		{
+			"name": "noSuchSegment",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/segs?seg_od=AVITO_DISCOUNT_100",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					],
+					"query": [
+						{
+							"key": "seg_od",
+							"value": "AVITO_DISCOUNT_100"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "noSuchSegment",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/segs?seg_od=AVITO_DISCOUNT_100",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							],
+							"query": [
+								{
+									"key": "seg_od",
+									"value": "AVITO_DISCOUNT_100"
+								}
+							]
+						}
+					},
+					"status": "Unprocessable Entity",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:16:29 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "181"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"title\": \"Segment specified incorrectly\",\n    \"request\": \"DELETE /segs?seg_od=AVITO_DISCOUNT_100\",\n    \"time\": \"2023-08-31T11:16:29+03:00\",\n    \"errorTraceId\": \"1a803fa5-e997-4058-9c8c-8a9c598620ee\"\n}"
+				}
+			]
+		},
+		{
+			"name": "alreadyExists",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"seg_id\":\"AVITO_DISCOUNT_25\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/segs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "alreadyExists",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"seg_id\":\"AVITO_DISCOUNT_25\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/segs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:16:34 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "156"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"title\": \"Specified segment already exists\",\n    \"request\": \"POST /segs\",\n    \"time\": \"2023-08-31T11:16:34+03:00\",\n    \"errorTraceId\": \"422fc53c-f889-4d47-a1d3-a7aaaa517823\"\n}"
+				}
+			]
+		},
+		{
+			"name": "brokenJson",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"seg_id\":\"AVITO_DISCOUNT_25}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/segs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"segs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "brokenJson",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"seg_id\":\"AVITO_DISCOUNT_25}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/segs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"segs"
+							]
+						}
+					},
+					"status": "Unprocessable Entity",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 31 Aug 2023 08:16:41 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "153"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"title\": \"Segment specified incorrectly\",\n    \"request\": \"POST /segs\",\n    \"time\": \"2023-08-31T11:16:41+03:00\",\n    \"errorTraceId\": \"0e526e37-933c-4e70-9c2b-91d3482988c3\"\n}"
+				}
+			]
+		}
+	]
+}
