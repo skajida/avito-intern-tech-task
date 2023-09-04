@@ -3,8 +3,8 @@
 ## Build
 
 ```bash
-podman build -f build/service-segs-db/Containerfile -t segments-db
-podman build -f build/service-segs-app/Containerfile -t segments-app .
+podman build -f build/service-segs/db/Containerfile -t segments-db
+podman build -f build/service-segs/app/Containerfile -t segments-app .
 podman kube play deploy/segments-pod.yml
 ```
 
