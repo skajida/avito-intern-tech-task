@@ -1,0 +1,11 @@
+api
+bin
+build
+deploy
+test
+docs
+
+.containerignore
+.git
+.gitignore
+*.md

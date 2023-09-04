@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: segments
+  name: service-segs
+spec:
+  containers:
+  - name: db
+    image: localhost/segments-db
+    env:
+    - name: POSTGRES_PASSWORD
+      value: qwertysegs2140
+    volumeMounts:
+    - mountPath: /var/lib/postgresql/data
+      name: db-pvc
+  - name: app
+    image: localhost/segments-app
+    ports:
+    - containerPort: 8080
+    volumeMounts:
+    - mountPath: /some/path/to/mounted/volume
+      name: app-pvc
+  volumes:
+  - name: db-pvc
+    persistentVolumeClaim:
+      claimName: segments-db
+  - name: app-pvc
+    persistentVolumeClaim:
+      claimName: segments-app

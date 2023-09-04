@@ -1,7 +1,6 @@
 FROM golang:alpine3.18 as builder
 
-ENV PACKAGE service-segs
-ENV DIRPATH /src/skajida/$PACKAGE
+ENV DIRPATH /go/service/segments
 WORKDIR $DIRPATH
 
 # dependencies
@@ -10,13 +9,13 @@ RUN go mod download
 
 # build
 COPY . .
+# ?
 ENV CGO_ENABLED 0
 ENV GOOS linux
-RUN go build -a -o bin/$PACKAGE $DIRPATH/cmd/$PACKAGE
+RUN go build -a -o bin/service-segs $DIRPATH/cmd/service-segs
 
 # image
 FROM alpine:3.18.3
 RUN apk add --no-cache ca-certificates && update-ca-certificates
-COPY --from=builder /src/skajida/service-segs/bin/service-segs /usr/bin/service-segs
-EXPOSE 8080 8080
-ENTRYPOINT ["/usr/bin/service-segs"]
+COPY --from=builder /go/service/segments/bin/service-segs /usr/local/bin/segments
+ENTRYPOINT ["/usr/local/bin/segments"]
