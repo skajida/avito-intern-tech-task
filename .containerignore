@@ -1,11 +1,11 @@
+.git
 api
 bin
 build
 deploy
-test
 docs
+test
 
 .containerignore
-.git
 .gitignore
 *.md
