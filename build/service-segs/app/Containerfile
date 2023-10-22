@@ -12,7 +12,7 @@ COPY . .
 RUN go build -a -o bin/service-segs $DIRPATH/cmd/service-segs
 
 # image
-FROM alpine:3.18.3
+FROM alpine:3.18
 RUN apk add --no-cache ca-certificates && update-ca-certificates
 COPY --from=builder /go/service/segments/bin/service-segs /usr/local/bin/segments
 ENTRYPOINT ["/usr/local/bin/segments"]
