@@ -4,7 +4,7 @@ import "context"
 
 const totalEntries = 1_000
 
-// dummy emulation of the behaviour of an external service containing users database
+// dummy emulation of the behaviour of an external repository containing users database
 type ERepository struct {
 	database any
 }
