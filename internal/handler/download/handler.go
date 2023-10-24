@@ -3,6 +3,7 @@ package download
 import (
 	"fmt"
 	"net/http"
+	mod "service-segs/internal/model"
 	c "service-segs/internal/model/constants"
 	hrf "service-segs/internal/model/http-response-forms"
 	"strings"
@@ -30,7 +31,7 @@ func downloadHandle(service downloader, w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		return
 	}
-	if file, err := service.DownloadFile(r.Context(), filename); err != nil {
+	if file, err := service.DownloadFile(r.Context(), mod.Filename(filename)); err != nil {
 		hrf.NewErrorResponse(r, "File not found").Send(w, http.StatusNotFound)
 		return
 	} else {
