@@ -1,4 +1,13 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-segs-cfg
+data:
+  PG_PASSWORD: qwertysegs2140
+  CSV_PATH: /mnt/csv-reports-pvc
+  SERVICE_PORT: 8080
+---
+apiVersion: v1
 kind: Pod
 metadata:
   labels:
@@ -7,24 +16,33 @@ metadata:
 spec:
   containers:
   - name: db
-    image: localhost/segments-db
+    image: localhost/service-segs-db
     env:
     - name: POSTGRES_PASSWORD
-      value: qwertysegs2140
+      valueFrom:
+        configMapKeyRef:
+          name: service-segs-cfg
+          key: PG_PASSWORD
+          optional: false
     volumeMounts:
     - mountPath: /var/lib/postgresql/data
       name: db-pvc
   - name: app
-    image: localhost/segments-app
+    image: localhost/service-segs-app
+    envFrom:
+    - configMapRef:
+        name: service-segs-cfg
+        optional: false
     ports:
     - containerPort: 8080
+      hostPort: 8080
     volumeMounts:
-    - mountPath: /some/path/to/mounted/volume
+    - mountPath: /mnt/csv-reports-pvc
       name: app-pvc
   volumes:
   - name: db-pvc
     persistentVolumeClaim:
-      claimName: segments-db
+      claimName: service-segs-db
   - name: app-pvc
     persistentVolumeClaim:
-      claimName: segments-app
+      claimName: service-segs-csv
