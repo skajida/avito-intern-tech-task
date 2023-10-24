@@ -3,24 +3,19 @@ package service
 import (
 	"context"
 	"fmt"
-	"io"
 	"math/rand"
-	"os"
+	mod "service-segs/internal/model"
 	"time"
-
-	c "service-segs/internal/model/constants"
-
-	"github.com/gocarina/gocsv"
-	"github.com/google/uuid"
 )
 
 type SegmentsService struct {
-	external erepository
-	internal irepository
+	external  erepository
+	internal  irepository
+	csvVolume csvRepository
 }
 
-func NewSegmentsService(extRepo erepository, intRepo irepository) *SegmentsService {
-	return &SegmentsService{external: extRepo, internal: intRepo}
+func NewSegmentsService(extRepo erepository, intRepo irepository, csvVol csvRepository) *SegmentsService {
+	return &SegmentsService{external: extRepo, internal: intRepo, csvVolume: csvVol}
 }
 
 const errorTemplate = "svc %s: %w"
@@ -137,29 +132,15 @@ func (this *SegmentsService) RequestHistory(
 	ctx context.Context,
 	id int,
 	start time.Time,
-) (string, error) {
+) (mod.Filename, error) {
 	end := time.Date(start.Year(), start.Month()+1, 1, 0, 0, 0, 0, time.Local)
 	history, err := this.internal.SelectHistory(ctx, id, start, end)
 	if err != nil {
 		return "", fmt.Errorf(errorTemplate, "history", err)
 	}
-	filename := uuid.New().String() + ".csv"
-	clientsFile, err := os.OpenFile(c.VolumePath+filename, os.O_WRONLY|os.O_CREATE, os.ModePerm)
-	if err != nil {
-		return "", c.InternalError
-	}
-	defer clientsFile.Close()
-	if err = gocsv.MarshalFile(&history, clientsFile); err != nil {
-		return "", c.InternalError
-	}
-	return filename, nil
+	return this.csvVolume.CreateHistoryFile(ctx, history)
 }
 
-func (this *SegmentsService) DownloadFile(ctx context.Context, filename string) ([]byte, error) {
-	file, err := os.OpenFile(c.VolumePath+filename, os.O_RDONLY, os.ModePerm)
-	if err != nil {
-		return []byte{}, c.NotFound
-	}
-	defer file.Close()
-	return io.ReadAll(file)
+func (this *SegmentsService) DownloadFile(ctx context.Context, filename mod.Filename) (mod.RawData, error) {
+	return this.csvVolume.DownloadHistoryFile(ctx, filename)
 }

@@ -3,9 +3,14 @@ package service
 
 import (
 	"context"
-	"service-segs/internal/model/exchange"
+	mod "service-segs/internal/model"
 	"time"
 )
+
+type csvRepository interface {
+	CreateHistoryFile(context.Context, mod.HistoryCollection) (mod.Filename, error)
+	DownloadHistoryFile(context.Context, mod.Filename) (mod.RawData, error)
+}
 
 type erepository interface {
 	Exists(context.Context, int) bool
@@ -21,7 +26,7 @@ type tbelongings interface {
 	SelectBelonging(context.Context, int) ([]string, error)
 	UpdateBelonging(context.Context, int, []string, []string) error
 	UpdateBelongingTimer(context.Context, int, []string, []string, time.Time) error
-	SelectHistory(context.Context, int, time.Time, time.Time) ([]exchange.HistoryEntry, error)
+	SelectHistory(context.Context, int, time.Time, time.Time) (mod.HistoryCollection, error)
 	AutoApply(context.Context, string, []int) error
 }
 

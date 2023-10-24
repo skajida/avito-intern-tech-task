@@ -1,4 +1,4 @@
-package exchange
+package model
 
 import "time"
 
@@ -8,3 +8,9 @@ type HistoryEntry struct {
 	Operation string    `csv:"operation"`
 	Time      time.Time `csv:"timestamp"`
 }
+
+type HistoryCollection []HistoryEntry
+
+type Filename string
+
+type RawData []byte

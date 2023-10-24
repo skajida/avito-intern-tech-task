@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	mod "service-segs/internal/model"
 	c "service-segs/internal/model/constants"
-	"service-segs/internal/model/exchange"
 	"strings"
 	"time"
 
@@ -151,7 +151,7 @@ func (this *IRepository) SelectHistory(
 	userId int,
 	from time.Time,
 	to time.Time,
-) ([]exchange.HistoryEntry, error) {
+) (mod.HistoryCollection, error) {
 	const request = `
 	SELECT user_id, tag, create_time, remove_time
 	FROM segments s INNER JOIN users_segments u
@@ -163,11 +163,11 @@ func (this *IRepository) SelectHistory(
 	`
 	rows, err := this.database.QueryContext(ctx, request, userId, from, to)
 	if err != nil {
-		return []exchange.HistoryEntry{}, fmt.Errorf(errorTemplate, "history", err)
+		return mod.HistoryCollection{}, fmt.Errorf(errorTemplate, "history", err)
 	}
 	defer rows.Close()
 
-	result := []exchange.HistoryEntry{}
+	result := mod.HistoryCollection{}
 	item := &struct {
 		userId     int
 		segTag     string
@@ -177,7 +177,7 @@ func (this *IRepository) SelectHistory(
 	for rows.Next() {
 		rows.Scan(&item.userId, &item.segTag, &item.createTime, &item.removeTime)
 		if item.createTime.After(from) && item.createTime.Before(to) {
-			result = append(result, exchange.HistoryEntry{
+			result = append(result, mod.HistoryEntry{
 				UserId:    item.userId,
 				SegTag:    item.segTag,
 				Operation: "add",
@@ -186,7 +186,7 @@ func (this *IRepository) SelectHistory(
 		}
 		if item.removeTime.Valid && item.removeTime.Time.After(from) &&
 			item.removeTime.Time.Before(to) {
-			result = append(result, exchange.HistoryEntry{
+			result = append(result, mod.HistoryEntry{
 				UserId:    item.userId,
 				SegTag:    item.segTag,
 				Operation: "remove",
